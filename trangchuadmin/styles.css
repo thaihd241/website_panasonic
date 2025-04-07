@@ -1,0 +1,114 @@
+/* Reset some basic styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f4f7fb;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Đảm bảo chiều cao tối thiểu của trang bằng chiều cao cửa sổ */
+}
+
+/* Header */
+header {
+  background-color: #0066cc;
+  color: white;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+header .user-info {
+  font-size: 16px;
+}
+
+header .user-info .btn {
+  color: #fff;
+  background-color: #d9534f;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+header .user-info .btn:hover {
+  background-color: #c9302c;
+}
+
+/* Main Container */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  flex: 1; /* Phần này sẽ chiếm không gian còn lại của trang */
+}
+
+/* Card */
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.card p {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.card .btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #0066cc;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.card .btn:hover {
+  background-color: #004d99;
+}
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: auto; /* Điều này sẽ đẩy footer xuống dưới cùng của trang */
+}
+
+footer a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

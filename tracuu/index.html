@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tra cứu bảo hành sản phẩm Panasonic</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="panasonic-logo.png" alt="Panasonic" />
+      </div>
+      <h1>Tra cứu thông tin bảo hành</h1>
+    </header>
+
+    <main>
+      <div class="form-container">
+        <h2>Nhập thông tin sản phẩm</h2>
+        <form id="warrantyForm" action="check-warranty.php" method="POST">
+          <label for="serialNumber">Mã sản phẩm (Serial number):</label>
+          <input
+            type="text"
+            id="serialNumber"
+            name="serialNumber"
+            required
+            placeholder="Nhập mã sản phẩm"
+          />
+          <button type="submit">Kiểm tra bảo hành</button>
+        </form>
+      </div>
+
+      <div class="result-container" id="result" style="display: none">
+        <h2>Thông tin bảo hành</h2>
+        <p><strong>Sản phẩm:</strong> <span id="product_name"></span></p>
+        <p><strong>Ngày mua:</strong> <span id="purchase_date"></span></p>
+        <p>
+          <strong>Thời gian bảo hành còn lại:</strong>
+          <span id="thoigianconlai"></span>
+        </p>
+        <p>
+          <strong>Tình trạng bảo hành:</strong>
+          <span id="tinhtrang"></span>
+        </p>
+        <p>
+          <strong>Thông tin liên hệ:</strong> <span id="contactInfo"></span>
+        </p>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const warrantyForm = document.getElementById("warrantyForm");
+
+        if (!warrantyForm) {
+          console.error("Không tìm thấy form với id 'warrantyForm'");
+          return;
+        }
+
+        warrantyForm.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const serialNumber = document.getElementById("serialNumber").value;
+
+          try {
+            const response = await fetch("check-warranty.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ serialNumber }),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+
+              document.getElementById("product_name").innerText =
+                data.product_name || "Không có thông tin";
+              document.getElementById("purchase_date").innerText =
+                data.purchase_date || "Không có thông tin";
+              document.getElementById("thoigianconlai").innerText =
+                data.remaining_warranty || "Không có thông tin";
+              document.getElementById("tinhtrang").innerText =
+                data.status || "Không có thông tin";
+              document.getElementById("contactInfo").innerText =
+                data.contact || "Không có thông tin";
+
+              document.getElementById("result").style.display = "block";
+            } else {
+              alert(
+                "Không tìm thấy thông tin bảo hành. Vui lòng kiểm tra lại mã sản phẩm."
+              );
+            }
+          } catch (error) {
+            console.error("Lỗi khi gửi yêu cầu:", error);
+            alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
