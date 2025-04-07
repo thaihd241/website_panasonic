@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gửi Yêu Cầu Hỗ Trợ</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="panasonic-logo.png" alt="Panasonic" />
+      </div>
+      <h1>Gửi Yêu Cầu Hỗ Trợ</h1>
+    </header>
+
+    <main>
+      <div class="form-container">
+        <h2>Vui lòng điền thông tin yêu cầu hỗ trợ</h2>
+        <form
+          action="process_form.php"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <label for="name">Họ và tên:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="Nhập họ và tên"
+          />
+
+          <label for="email">Địa chỉ email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Nhập email để nhận phản hồi"
+          />
+
+          <label for="phone">Số điện thoại (tùy chọn):</label>
+          <input
+            type="text"
+            id="phone"
+            name="phone"
+            placeholder="Nhập số điện thoại"
+          />
+
+          <label for="serialNumber">Mã sản phẩm (Serial Number):</label>
+          <input
+            type="text"
+            id="serialNumber"
+            name="serialNumber"
+            placeholder="Nhập mã sản phẩm nếu có"
+          />
+
+          <label for="issueType">Loại vấn đề:</label>
+          <select id="issueType" name="issueType" required>
+            <option value="">Chọn loại vấn đề</option>
+            <option value="technicalSupport">Hỗ trợ kỹ thuật</option>
+            <option value="productIssue">Vấn đề sản phẩm</option>
+            <option value="warrantyQuestion">Câu hỏi về bảo hành</option>
+            <option value="generalInquiry">Hỏi thông tin chung</option>
+          </select>
+
+          <label for="details">Chi tiết yêu cầu:</label>
+          <textarea
+            id="details"
+            name="details"
+            rows="5"
+            placeholder="Mô tả chi tiết yêu cầu hoặc vấn đề"
+            required
+          ></textarea>
+
+          <label for="fileUpload">Tải lên tệp đính kèm (nếu có):</label>
+          <input type="file" id="fileUpload" name="fileUpload" />
+
+          <button type="submit">Gửi yêu cầu hỗ trợ</button>
+        </form>
+      </div>
+
+      <!-- <div class="result-container" id="result" style="display: none">
+        <h2>Cảm ơn bạn đã gửi yêu cầu!</h2>
+        <p>
+          Yêu cầu của bạn đã được tiếp nhận. Chúng tôi sẽ phản hồi trong thời
+          gian sớm nhất.
+        </p>
+      </div> -->
+    </main>
+
+    <footer>
+      <p>
+        Liên hệ hỗ trợ:
+        <a href="mailto:support@panasonic.com">support@panasonic.com</a>
+      </p>
+      <p>Địa chỉ: 1234 Đường ABC, Thành phố XYZ</p>
+    </footer>
+
+    <!-- <script src="scripts.js"></script> -->
+  </body>
+</html>
