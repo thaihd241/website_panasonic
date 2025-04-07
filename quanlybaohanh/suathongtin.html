@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sửa Thông Tin Bảo Hành</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+
+      .container {
+        width: 90%;
+        margin: 30px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      label {
+        font-weight: bold;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+      }
+
+      button {
+        padding: 10px 16px;
+        font-size: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sửa Thông Tin Bảo Hành</h1>
+      <form id="editForm">
+        <label for="name">Tên Khách Hàng:</label>
+        <input type="text" id="name" name="name" />
+
+        <label for="phone">Số Điện Thoại:</label>
+        <input type="text" id="phone" name="phone" />
+
+        <label for="address">Địa Chỉ:</label>
+        <input type="text" id="address" name="address" />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+
+        <label for="product_name">Tên Sản Phẩm:</label>
+        <input type="text" id="product_name" name="product_name" />
+
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" />
+
+        <label for="serial">Serial:</label>
+        <input type="text" id="serial" name="serial" />
+
+        <label for="purchase_date">Ngày Đăng Ký:</label>
+        <input type="date" id="purchase_date" name="purchase_date" />
+
+        <label for="store">Cửa Hàng:</label>
+        <input type="text" id="store" name="store" />
+
+        <label for="issue_description">Mô Tả:</label>
+        <textarea id="issue_description" name="issue_description"></textarea>
+
+        <button type="button" onclick="updateWarranty()">Cập Nhật</button>
+      </form>
+    </div>
+
+    <script>
+      // Lấy ID từ URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const warrantyId = urlParams.get("id");
+
+      // Hàm tải dữ liệu bảo hành
+      function loadWarrantyDetails() {
+        fetch(`get_warranty_details.php?id=${warrantyId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("name").value = data.name;
+            document.getElementById("phone").value = data.phone;
+            document.getElementById("address").value = data.address;
+            document.getElementById("email").value = data.email;
+            document.getElementById("product_name").value = data.product_name;
+            document.getElementById("model").value = data.model;
+            document.getElementById("serial").value = data.serial;
+            document.getElementById("purchase_date").value = data.purchase_date;
+            document.getElementById("store").value = data.store;
+            document.getElementById("issue_description").value =
+              data.issue_description;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      // Hàm cập nhật thông tin bảo hành
+      function updateWarranty() {
+        const updatedData = {
+          id: warrantyId,
+          name: document.getElementById("name").value,
+          phone: document.getElementById("phone").value,
+          address: document.getElementById("address").value,
+          email: document.getElementById("email").value,
+          product_name: document.getElementById("product_name").value,
+          model: document.getElementById("model").value,
+          serial: document.getElementById("serial").value,
+          purchase_date: document.getElementById("purchase_date").value,
+          store: document.getElementById("store").value,
+          issue_description: document.getElementById("issue_description").value,
+        };
+
+        fetch("update_warranty_data.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.success) {
+              alert("Cập nhật thông tin thành công!");
+              window.location.href = "index.html";
+            } else {
+              alert("Cập nhật thất bại: " + result.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Có lỗi xảy ra. Vui lòng thử lại!");
+          });
+      }
+
+      // Tải thông tin khi trang được tải
+      window.onload = loadWarrantyDetails;
+    </script>
+  </body>
+</html>

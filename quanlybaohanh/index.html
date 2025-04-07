@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý thông tin bảo hành</title>
+    <link
+      rel="stylesheet"
+      rel="stylesheet" href="styles.css" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="top-bar">
+        <button class="back-btn" onclick="window.location.href='http://localhost/Web_panasonic/trangchuadmin/index.html'">Quay lại</button>
+        
+      </div>
+      <h1>Quản Lý Thông Tin Bảo Hành</h1>
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Tìm kiếm thông tin..." />
+        <button onclick="searchData()">Tìm kiếm</button>
+        
+          <button
+            class="add-btn"
+            onclick="window.location.href='http://localhost/Web_panasonic/quanlybaohanh/themthongtin/add_warranty_form.html'"
+          >
+            Thêm Thông Tin
+          </button>
+        </div>
+      </div>
+
+      <table id="warrantyTable">
+        <thead>
+          <tr>
+            <th>Số Thứ Tự</th>
+            <th>Tên Khách Hàng</th>
+            <th>Số Điện Thoại</th>
+            <th>Địa Chỉ</th>
+            <th>Email</th>
+            <th>Tên Sản Phẩm</th>
+            <th>Model</th>
+            <th>Serial</th>
+            <th>Ngày Đăng Ký</th>
+            <th>Cửa Hàng</th>
+            <th>Mô Tả</th>
+            <!-- <th>Hình Ảnh</th> -->
+            <th>Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody id="dataRows">
+          <!-- Dữ liệu sẽ được chèn vào đây từ PHP -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Hàm lấy dữ liệu từ PHP và hiển thị lên bảng
+      function loadWarrantyData() {
+        fetch("get_warranty_data.php") // Lấy dữ liệu từ file PHP
+          .then((response) => response.json())
+          .then((data) => {
+            const tableBody = document.getElementById("dataRows");
+            tableBody.innerHTML = ""; // Xóa dữ liệu cũ trước khi chèn mới
+            data.forEach((row, index) => {
+              const tableRow = document.createElement("tr");
+              tableRow.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${row.name}</td>
+                            <td>${row.phone}</td>
+                            <td>${row.address}</td>
+                            <td>${row.email}</td>
+                            <td>${row.product_name}</td>
+                            <td>${row.model}</td>
+                            <td>${row.serial}</td>
+                            <td>${row.purchase_date}</td>
+                            <td>${row.store}</td>
+                            <td>${row.issue_description}</td>
+                            
+                            <td class="action-buttons">
+                                <button class="edit-btn" onclick="editWarranty(${row.id})">Sửa</button>
+                                <button class="delete-btn" onclick="deleteWarranty(${row.id})">Xóa</button>
+                            </td>
+                        `;
+              tableBody.appendChild(tableRow);
+            });
+          });
+      }
+      // Hàm chuyển hướng sang trang sửa thông tin
+      function editWarranty(id) {
+      window.location.href = `suathongtin.html?id=${id}`;
+      }
+      // Tìm kiếm dữ liệu trong bảng
+      function searchData() {
+        let input = document.getElementById("search").value.toLowerCase();
+        let table = document.getElementById("warrantyTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+          let cells = rows[i].getElementsByTagName("td");
+          let matched = false;
+          for (let j = 0; j < cells.length - 1; j++) {
+            let cellText = cells[j].innerText.toLowerCase();
+            if (cellText.includes(input)) {
+              matched = true;
+              break;
+            }
+          }
+          if (matched) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+        //Ham xoa du lieu
+        function deleteWarranty(id) {
+  if (confirm("Bạn có chắc chắn muốn xóa thông tin này?")) {
+    fetch(`delete_warranty_data.php?id=${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          alert("Xóa thông tin thành công!");
+          loadWarrantyData(); // Tải lại dữ liệu
+        } else {
+          alert("Xóa thông tin thất bại: " + result.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Có lỗi xảy ra. Vui lòng thử lại!");
+      });
+  }
+}
+      // Load dữ liệu khi trang web được tải
+      window.onload = loadWarrantyData;
+    </script>
+  </body>
+</html>

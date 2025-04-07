@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Nhận Thông Tin Bảo Hành Panasonic</title>
+    <link rel="stylesheet" href="styles.css" />
+    <form action="process_form.php" method="POST" enctype="multipart/form-data">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Form Nhận Thông Tin Bảo Hành</h1>
+      <form action="#" method="POST">
+        <!-- Thông tin khách hàng -->
+        <h2>Thông tin khách hàng</h2>
+        <label for="name">Họ và tên:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Nhập họ và tên"
+          required
+        />
+
+        <label for="phone">Số điện thoại:</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="Nhập số điện thoại"
+          required
+        />
+
+        <label for="address">Địa chỉ:</label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          placeholder="Nhập địa chỉ"
+          required
+        />
+
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Nhập email (nếu có)"
+        />
+
+        <!-- Thông tin sản phẩm -->
+        <h2>Thông tin sản phẩm</h2>
+        <label for="product-name">Tên sản phẩm:</label>
+        <input
+          type="text"
+          id="product-name"
+          name="product-name"
+          placeholder="Nhập tên sản phẩm"
+          required
+        />
+
+        <label for="model">Model sản phẩm:</label>
+        <input
+          type="text"
+          id="model"
+          name="model"
+          placeholder="Nhập mã sản phẩm"
+          required
+        />
+
+        <label for="serial">Số serial:</label>
+        <input
+          type="text"
+          id="serial"
+          name="serial"
+          placeholder="Nhập số serial"
+          required
+        />
+
+        <label for="purchase-date">Ngày mua:</label>
+        <input type="date" id="purchase-date" name="purchase-date" required />
+
+        <label for="store">Nơi mua hàng:</label>
+        <input
+          type="text"
+          id="store"
+          name="store"
+          placeholder="Nhập tên cửa hàng hoặc đại lý"
+        />
+
+        <!-- Thông tin bảo hành -->
+        <h2>Thông tin bảo hành</h2>
+        <label for="issue">Mô tả sự cố (nếu có):</label>
+        <textarea
+          id="issue"
+          name="issue"
+          rows="4"
+          placeholder="Nhập chi tiết về vấn đề bạn gặp phải"
+        ></textarea>
+        <label for="invoice-upload">Tải lên hóa đơn hoặc giấy bảo hành:</label>
+        <input
+          type="file"
+          id="invoice-upload"
+          name="invoice-upload"
+          accept="image/*,.pdf"
+          required
+        />
+        <!-- Xác nhận -->
+        <button type="submit">Gửi thông tin</button>
+      </form>
+    </div>
+  </body>
+</html>
