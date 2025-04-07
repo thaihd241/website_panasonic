@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Tài Khoản</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 400px;
+      }
+
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .form-actions button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .btn-save {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-save:hover {
+        background-color: #45a049;
+      }
+
+      .btn-delete {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .btn-delete:hover {
+        background-color: #d32f2f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Quản Lý Tài Khoản</h2>
+      <form id="accountForm">
+        <div class="form-group">
+          <label for="username">Tên Đăng Nhập</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Nhập tên đăng nhập"
+            disabled
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Nhập email"
+            disabled
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Mật Khẩu</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Nhập mật khẩu"
+            disabled
+          />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-save" onclick="enableEdit()">
+            Chỉnh sửa
+          </button>
+          <button type="button" class="btn-save" onclick="saveAccount()">
+            Lưu
+          </button>
+          <button type="button" class="btn-delete" onclick="deleteAccount()">
+            Xóa Tài Khoản
+          </button>
+        </div>
+      </form>
+    </div>
+    <script>
+      // Hàm kích hoạt chỉnh sửa
+      function enableEdit() {
+        document.getElementById("username").disabled = false;
+        document.getElementById("email").disabled = false;
+        document.getElementById("password").disabled = false;
+      }
+
+      function fetchAccountData() {
+        // Gửi yêu cầu đến API
+        fetch("get_user_account.php", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Để gửi cookie/session
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to fetch account data");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              // Điền thông tin vào các trường input
+              document.getElementById("username").value = data.data.username;
+              document.getElementById("email").value = data.data.email;
+              document.getElementById("password").value = data.data.password;
+            } else {
+              alert(data.message || "Không thể tải dữ liệu tài khoản.");
+            }
+          })
+          .catch((error) => {
+            console.error("Lỗi:", error);
+            alert("Đã xảy ra lỗi khi tải dữ liệu tài khoản.");
+          });
+      }
+
+      // Gọi hàm này khi trang được tải hoặc khi người dùng mở chức năng Quản Lý Tài Khoản
+      document.addEventListener("DOMContentLoaded", fetchAccountData);
+
+      /// Hàm xóa tài khoản
+      function deleteAccount() {
+        if (confirm("Bạn có chắc chắn muốn xóa tài khoản không?")) {
+          // Gửi yêu cầu xóa tài khoản
+          fetch("delete_user_account.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", // Để gửi cookie/session
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Không thể xóa tài khoản.");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              if (data.success) {
+                alert("Tài khoản đã được xóa thành công!");
+                // Chuyển hướng về trang chủ
+                window.location.href =
+                  "http://localhost/Web_panasonic/trangchu/index.html";
+              } else {
+                alert(data.message || "Không thể xóa tài khoản.");
+              }
+            })
+            .catch((error) => {
+              console.error("Lỗi:", error);
+              alert("Đã xảy ra lỗi khi xóa tài khoản.");
+            });
+        } else {
+          // Nếu chọn Không, quay lại trang hiện tại mà không làm gì thêm
+          return;
+        }
+      }
+
+      // Hàm lưu thông tin đã chỉnh sửa
+      function saveAccount() {
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        console.log("Dữ liệu gửi đi:", { username, email, password }); // Log dữ liệu
+
+        // Gửi dữ liệu đến server qua fetch
+        fetch("update_user_account.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Để gửi cookie/session
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            password: password,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to update account data");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              alert("Thông tin tài khoản đã được cập nhật thành công!");
+              // Vô hiệu hóa lại các trường sau khi lưu
+              document.getElementById("username").disabled = true;
+              document.getElementById("email").disabled = true;
+              document.getElementById("password").disabled = true;
+            } else {
+              alert(data.message || "Không thể cập nhật thông tin tài khoản.");
+            }
+          })
+          .catch((error) => {
+            console.error("Lỗi:", error);
+            alert("Đã xảy ra lỗi khi cập nhật thông tin tài khoản.");
+          });
+      }
+    </script>
+  </body>
+</html>

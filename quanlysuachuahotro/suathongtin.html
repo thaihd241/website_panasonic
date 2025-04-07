@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sửa Thông Tin Yêu Cầu Sửa Chữa Hỗ Trợ</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+
+      .container {
+        width: 90%;
+        margin: 30px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      label {
+        font-weight: bold;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+      }
+
+      button {
+        padding: 10px 16px;
+        font-size: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sửa Thông Tin Yêu Cầu Sửa Chữa Hỗ Trợ</h1>
+      <form id="editForm">
+        <label for="username">Tên Khách Hàng:</label>
+        <input type="text" id="username" name="username" />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+
+        <label for="phone">Số Điện Thoại:</label>
+        <input type="text" id="phone" name="phone" />
+
+        <label for="serial">Serial:</label>
+        <input type="text" id="serial" name="serial" />
+
+        <label for="type_problem">Loại vấn đề:</label>
+        <select id="type_problem" name="type_problem" required>
+          <option value="">Chọn loại vấn đề</option>
+          <option value="Hỗ trợ kỹ thuật">Hỗ trợ kỹ thuật</option>
+          <option value="Vấn đề sản phẩm">Vấn đề sản phẩm</option>
+          <option value="Câu hỏi bảo hành">Câu hỏi về bảo hành</option>
+          <option value="Hỏi thông tin chung">Hỏi thông tin chung</option>
+        </select>
+
+        <label for="describe">Mô Tả:</label>
+        <textarea id="describe" name="describe"></textarea>
+
+        <button type="button" onclick="updatehotro()">Cập Nhật</button>
+      </form>
+    </div>
+
+    <script>
+      // Lấy ID từ URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const warrantyId = urlParams.get("id");
+
+      // Hàm tải dữ liệu
+      function loadWarrantyDetails() {
+        fetch(`get_warranty_details.php?id=${warrantyId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("username").value = data.username;
+            document.getElementById("email").value = data.email;
+            document.getElementById("phone").value = data.phone;
+            document.getElementById("serial").value = data.serial;
+            document.getElementById("type_problem").value = data.type_problem;
+            document.getElementById("describe").value = data.describe;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      // Hàm cập nhật thông tin bảo hành
+      function updatehotro() {
+        const updatedData = {
+          id: warrantyId,
+          username: document.getElementById("username").value,
+          email: document.getElementById("email").value,
+          phone: document.getElementById("phone").value,
+          serial: document.getElementById("serial").value,
+          type_problem: document.getElementById("type_problem").value,
+          describe: document.getElementById("describe").value,
+        };
+
+        fetch("update_hotro.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Mã lỗi: " + response.status); // Kiểm tra nếu phản hồi không phải là OK
+            }
+            return response.json(); // Chuyển đổi sang JSON nếu không có lỗi
+          })
+
+          .then((result) => {
+            if (result.success) {
+              alert("Cập nhật thông tin thành công!");
+              window.location.href = "index.html";
+            } else {
+              alert("Cập nhật thất bại: " + result.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Có lỗi xảy ra. Vui lòng thử lại!");
+          });
+      }
+
+      // Tải thông tin khi trang được tải
+      window.onload = loadWarrantyDetails;
+    </script>
+  </body>
+</html>

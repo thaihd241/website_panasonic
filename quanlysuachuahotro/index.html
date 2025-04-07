@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý yêu cầu sửa chữa hoặc hỗ trợ</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+
+      .container {
+        width: 90%;
+        margin: 30px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .back-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  color: white;
+  background-color: #6c757d;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+.back-btn:active {
+  background-color: #4e555b;
+  transform: translateY(0);
+}
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .search-bar {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .search-bar input[type="text"] {
+        width: 30%;
+        padding: 8px;
+        font-size: 14px;
+        margin-right: 10px;
+      }
+
+      .search-bar button {
+        padding: 8px 16px;
+        font-size: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        /* margin-right: 10px; */
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+      }
+
+      th {
+        background-color: #007bff;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      td img {
+        max-width: 50px;
+        max-height: 50px;
+        border-radius: 50%;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .action-buttons button {
+        padding: 5px 10px;
+        border: none;
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .delete-btn {
+        background-color: #dc3545;
+      }
+
+      .add-btn {
+        background-color: #17a2b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="top-bar">
+        <button class="back-btn" onclick="window.location.href='http://localhost/Web_panasonic/trangchuadmin/index.html'">Quay lại</button>
+        <h1>Quản Lý Yêu Cầu Sửa Chữa Hỗ Trợ</h1>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Tìm kiếm yêu cầu..." />
+        <button onclick="searchData()">Tìm kiếm</button>
+        
+          <button
+            class="add-btn"
+            onclick="window.location.href='http://localhost/Web_panasonic/quanlysuachuahotro/themyeucau/index.html'"
+          >
+            Thêm Yêu Cầu
+          </button>
+        </div>
+      </div>
+
+      <table id="warrantyTable">
+        <thead>
+          <tr>
+            <th>Số Thứ Tự</th>
+            <th>Tên Khách Hàng</th>
+            <th>Email</th>
+            <th>Số Điện Thoại</th>
+            <th>Serial</th>
+            <th>Loại Vấn Đề</th>
+            <th>Chi Tiết Yêu Cầu</th>
+            
+            <th>Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody id="dataRows">
+          <!-- Dữ liệu sẽ được chèn vào đây từ PHP -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Hàm lấy dữ liệu từ PHP và hiển thị lên bảng
+      function loadWarrantyData() {
+        fetch("get_warranty_data.php") // Lấy dữ liệu từ file PHP
+          .then((response) => response.json())
+          .then((data) => {
+            const tableBody = document.getElementById("dataRows");
+            tableBody.innerHTML = ""; // Xóa dữ liệu cũ trước khi chèn mới
+            data.forEach((row, index) => {
+              const tableRow = document.createElement("tr");
+              tableRow.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${row.username}</td>
+                            <td>${row.email}</td>
+                            <td>${row.phone}</td>                          
+                            <td>${row.serial}</td>
+                            <td>${row.type_problem}</td>
+                            <td>${row.describe}</td>
+                            
+                            <td class="action-buttons">
+                                <button class="edit-btn" onclick="editWarranty(${row.id})">Sửa</button>
+                                <button class="delete-btn" onclick="deleteWarranty(${row.id})">Xóa</button>
+                            </td>
+                        `;
+              tableBody.appendChild(tableRow);
+            });
+          });
+      }
+      // Hàm chuyển hướng sang trang sửa thông tin
+      function editWarranty(id) {
+      window.location.href = `suathongtin.html?id=${id}`;
+      }
+      // Tìm kiếm dữ liệu trong bảng
+      function searchData() {
+        let input = document.getElementById("search").value.toLowerCase();
+        let table = document.getElementById("warrantyTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+          let cells = rows[i].getElementsByTagName("td");
+          let matched = false;
+          for (let j = 0; j < cells.length - 1; j++) {
+            let cellText = cells[j].innerText.toLowerCase();
+            if (cellText.includes(input)) {
+              matched = true;
+              break;
+            }
+          }
+          if (matched) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+        //Ham xoa du lieu
+        function deleteWarranty(id) {
+  if (confirm("Bạn có chắc chắn muốn xóa thông tin này?")) {
+    fetch(`delete_warranty_data.php?id=${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          alert("Xóa thông tin thành công!");
+          loadWarrantyData(); // Tải lại dữ liệu
+        } else {
+          alert("Xóa thông tin thất bại: " + result.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Có lỗi xảy ra. Vui lòng thử lại!");
+      });
+  }
+}
+      // Load dữ liệu khi trang web được tải
+      window.onload = loadWarrantyData;
+    </script>
+  </body>
+</html>
