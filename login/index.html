@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Ký và Đăng Nhập</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Tabs cho Đăng nhập và Đăng ký -->
+      <div class="tabs">
+        <button class="tab-button active" id="login-tab">Đăng Nhập</button>
+        <button class="tab-button" id="register-tab">Đăng Ký</button>
+      </div>
+
+      <!-- Form Đăng Nhập -->
+      <div id="login-form" class="form active">
+        <h2>Đăng Nhập</h2>
+        <form id="loginForm" action="auth.php" method="POST">
+          <input
+            type="text"
+            id="login-username"
+            name="login-username"
+            placeholder="Tên đăng nhập"
+            required
+          />
+          <input
+            type="password"
+            id="login-password"
+            name="login-password"
+            placeholder="Mật khẩu"
+            required
+          />
+          <button type="submit" name="login">Đăng Nhập</button>
+        </form>
+      </div>
+
+      <!-- Form Đăng Ký -->
+      <div id="register-form" class="form">
+        <h2>Đăng Ký</h2>
+        <form id="registerForm" action="auth.php" method="POST">
+          <input
+            type="text"
+            id="register-username"
+            name="register-username"
+            placeholder="Tên đăng nhập"
+            required
+          />
+          <input
+            type="email"
+            id="register-email"
+            name="register-email"
+            placeholder="Email"
+            required
+          />
+          <input
+            type="password"
+            id="register-password"
+            name="register-password"
+            placeholder="Mật khẩu"
+            required
+          />
+          <!-- <select id="register-role" name="register-role">
+            <option value="customer">Khách hàng</option>
+            <option value="admin">Nhân viên</option>
+          </select> -->
+          <button type="submit" name="register">Đăng Ký</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
